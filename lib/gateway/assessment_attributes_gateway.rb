@@ -60,12 +60,19 @@ module Gateway
         .map { |result| result }
     end
 
-    def fetch_assessment_attributes(attribute_column_array)
+    def fetch_assessment_attributes(
+      attribute_column_array,
+      where_clause_hash = ""
+    )
       # SELECT assessment_id, COALESCE(address1, '') as address1, COALESCE(address2, '') as address2, COALESCE(address3, '') as address3, , COALESCE(building_reference_number, '') as building_reference_number
       # FROM crosstab($$
       # SELECT  assessment_id, attribute_name, attribute_value
       # FROM assessment_attribute_values av
       # JOIN assessment_attributes a ON av.attribute_id = a.attribute_id
+      #  JOIN (SELECT  assessment_id FROM assessment_attributes aa
+      #                     JOIN assessment_attribute_values aav on aa.attribute_id = aav.attribute_id
+      #                     WHERE aa.attribute_name = 'address3' AND aav.attribute_value = 'Some County'
+      #                     GROUP BY assessment_id) w ON W.assessment_Id = av.assessment_id
       # WHERE a.attribute_name IN ('address2','address3','address1', 'building_reference_number')
       # ORDER BY assessment_id, CASE attribute_name WHEN 'address1' THEN 1 WHEN 'address2' THEN 2 WHEN 'address3' THEN 3 ELSE 4 END
       # $$,
@@ -75,13 +82,20 @@ module Gateway
       @attribute_columns_array = attribute_column_array.sort
       where_clause = attribute_where_clause
       virtual_columns = virtual_column_types
+      filter_assesements =
+        if where_clause_hash.empty?
+          ""
+        else
+          filter_assesements_where_clause(where_clause_hash)
+        end
       sql = <<-SQL
               SELECT assessment_id, #{coalesce_colums}
               FROM crosstab(
               $$
-              SELECT  assessment_id, attribute_name, attribute_value
+              SELECT  av.assessment_id, a.attribute_name, av.attribute_value
               FROM assessment_attribute_values av
               JOIN assessment_attributes a ON av.attribute_id = a.attribute_id
+              #{filter_assesements}
               WHERE a.attribute_name IN (#{where_clause})
               ORDER BY assessment_id, #{order_sequence}
               $$,
@@ -91,6 +105,17 @@ module Gateway
 
       results = ActiveRecord::Base.connection.exec_query(sql, "SQL")
       results.map { |result| result }
+    end
+
+    def filter_assesements_where_clause(where_clause_hash)
+      sql = <<-SQL
+        JOIN (SELECT  aav.assessment_id
+              FROM assessment_attributes aa
+               JOIN assessment_attribute_values aav on aa.attribute_id = aav.attribute_id
+              WHERE aa.attribute_name = '#{where_clause_hash.keys.first}' AND aav.attribute_value = '#{where_clause_hash[where_clause_hash.keys.first]}'
+              GROUP BY aav.assessment_id) w
+          ON W.assessment_Id = av.assessment_id
+      SQL
     end
 
     def fetch_sum(attribute_name, value_type = "int")

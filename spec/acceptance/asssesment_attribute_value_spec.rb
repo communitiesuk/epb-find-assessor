@@ -105,7 +105,7 @@ describe "Acceptance::AssessmentAttributeValue" do
     end
 
     # get_fixture_headers.each do |header|
-    #   it "tests the attribute value: #{header} exported matches the fixture" do
+    #   xit "tests the attribute value: #{header} exported matches the fixture" do
     #     expect(exported_data[0][header.downcase]).to eq(@fixture_csv.first[header])
     #   end
     # end

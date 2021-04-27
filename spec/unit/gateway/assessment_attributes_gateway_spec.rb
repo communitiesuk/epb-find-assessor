@@ -179,7 +179,7 @@ describe Gateway::AssessmentAttributesGateway do
         )
       end
 
-      it "should have 4 rows for the 2nd assessments" do
+      it "returns 4 rows for the 2nd assessments" do
         expect(assessement_attribute_values.rows.count).to eq(9)
       end
 
@@ -228,6 +228,22 @@ describe Gateway::AssessmentAttributesGateway do
           expect(
             gateway.fetch_average("heating_cost_current", "float").to_f,
           ).to eq(10.99)
+        end
+      end
+
+      context "when fetching the pivoted data based on the value of an attribute" do
+        let(:pivoted_data) do
+          gateway.fetch_assessment_attributes(
+            %w[construction_age_band glazed_type],
+            { heating_cost_current: "9.45" },
+          )
+        end
+
+        it "returns only the row for the assessments with that attibute" do
+          expect(pivoted_data.count).to eq(1)
+          expect(pivoted_data[0]["assessment_id"]).to eq(
+            "0000-0000-0000-0000-0003",
+          )
         end
       end
 
