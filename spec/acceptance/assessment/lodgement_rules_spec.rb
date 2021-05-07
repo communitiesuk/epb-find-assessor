@@ -94,7 +94,7 @@ describe "Acceptance::LodgementRules" do
 
         response =
           lodge_assessment(
-            assessment_body: xml_doc.to_xml,
+            assessment_body: xml_doc,
             accepted_responses: [400],
             auth_data: {
               scheme_ids: [scheme_id],

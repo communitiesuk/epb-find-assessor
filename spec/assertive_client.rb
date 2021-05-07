@@ -313,7 +313,8 @@ def lodge_assessment(
   schema_name: "RdSAP-Schema-20.0.0",
   headers: {},
   migrated: nil,
-  override: nil
+  override: nil,
+  change_lodgement_date: { "Inspection-Date": Date.today.to_s, "Registration-Date": Date.today.to_s, "Completion-Date": Date.today.to_s }
 )
   path =
     if !migrated.nil?
@@ -328,11 +329,19 @@ def lodge_assessment(
     header "Content-type", "application/xml+" + schema_name
   end
 
+  change_lodgement_date.each do |k, v|
+    if v == :delete
+      assessment_body.at(k).remove
+    else
+      assessment_body.at(k).children = v
+    end
+  end
+
   headers.each { |key, value| header key.to_s, value.to_s }
 
   assertive_post(
     path,
-    assessment_body,
+    assessment_body.serialize,
     accepted_responses,
     authenticate,
     auth_data,
