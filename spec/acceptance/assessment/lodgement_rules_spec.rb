@@ -94,12 +94,13 @@ describe "Acceptance::LodgementRules" do
 
         response =
           lodge_assessment(
-            assessment_body: xml_doc.to_xml,
+            assessment_body: xml_doc,
             accepted_responses: [400],
             auth_data: {
               scheme_ids: [scheme_id],
             },
             schema_name: "RdSAP-Schema-20.0.0",
+            change_fixture_nodes: { "Inspection-Date": Date.today.to_s, "Registration-Date": Date.today.to_s, "Completion-Date": Date.today.to_s },
           )
         expect(JSON.parse(response.body, symbolize_names: true)[:errors]).to eq(
           [
