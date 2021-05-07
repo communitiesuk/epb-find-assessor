@@ -100,7 +100,6 @@ describe "Acceptance::LodgementRules" do
               scheme_ids: [scheme_id],
             },
             schema_name: "RdSAP-Schema-20.0.0",
-            change_fixture_nodes: { "Inspection-Date": Date.today.to_s, "Registration-Date": Date.today.to_s, "Completion-Date": Date.today.to_s },
           )
         expect(JSON.parse(response.body, symbolize_names: true)[:errors]).to eq(
           [

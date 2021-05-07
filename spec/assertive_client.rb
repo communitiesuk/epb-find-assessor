@@ -314,8 +314,7 @@ def lodge_assessment(
   headers: {},
   migrated: nil,
   override: nil,
-  change_fixture_nodes: nil,
-  add_fixture_nodes: []
+  change_lodgement_date: { "Inspection-Date": Date.today.to_s, "Registration-Date": Date.today.to_s, "Completion-Date": Date.today.to_s }
 )
   path =
     if !migrated.nil?
@@ -330,22 +329,19 @@ def lodge_assessment(
     header "Content-type", "application/xml+" + schema_name
   end
 
-  unless change_fixture_nodes.nil?
-    change_fixture_nodes.each do |k, v|
-      if v == :delete
-        assessment_body.at(k).remove
-      else
-        assessment_body.at(k).children = v
-      end
+  change_lodgement_date.each do |k, v|
+    if v == :delete
+      assessment_body.at(k).remove
+    else
+      assessment_body.at(k).children = v
     end
   end
-
 
   headers.each { |key, value| header key.to_s, value.to_s }
 
   assertive_post(
     path,
-    assessment_body.to_xml,
+    assessment_body.serialize,
     accepted_responses,
     authenticate,
     auth_data,
