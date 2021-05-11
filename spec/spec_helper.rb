@@ -215,9 +215,13 @@ RSpec.configure do |config|
     fuel_price_mock.disable
   end
 
-  config.before(:all) { Timecop.freeze(2021, 12, 1) }
+  config.before(:all) { Timecop.freeze(2029, 1, 1) }
+
+  config.before(set_with_timecop: true) { Timecop.freeze(2021, 6, 21) }
 
   config.after(:all) { Timecop.return }
+
+  config.after(set_with_timecop: true) { Timecop.return }
 
   config.before(:each) { DatabaseCleaner.strategy = :transaction }
 

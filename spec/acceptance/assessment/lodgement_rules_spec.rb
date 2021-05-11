@@ -1,4 +1,4 @@
-describe "Acceptance::LodgementRules" do
+describe "Acceptance::LodgementRules", set_with_timecop: true do
   include RSpecRegisterApiServiceMixin
 
   let(:fetch_assessor_stub) { AssessorStub.new }
@@ -94,7 +94,7 @@ describe "Acceptance::LodgementRules" do
 
         response =
           lodge_assessment(
-            assessment_body: xml_doc,
+            assessment_body: xml_doc.to_xml,
             accepted_responses: [400],
             auth_data: {
               scheme_ids: [scheme_id],
