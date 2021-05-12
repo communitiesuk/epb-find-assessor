@@ -217,11 +217,11 @@ RSpec.configure do |config|
 
   config.before(:all) { Timecop.freeze(2029, 1, 1) }
 
-  config.before(set_with_timecop: true) { Timecop.freeze(2021, 6, 21) }
+  config.before(:all, set_with_timecop: true) { Timecop.freeze(2021, 6, 21) }
 
   config.after(:all) { Timecop.return }
 
-  config.after(set_with_timecop: true) { Timecop.return }
+  config.after(:all, set_with_timecop: true) { Timecop.return }
 
   config.before(:each) { DatabaseCleaner.strategy = :transaction }
 

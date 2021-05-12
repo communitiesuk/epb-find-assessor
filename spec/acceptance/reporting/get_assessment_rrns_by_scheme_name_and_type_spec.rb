@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Acceptance::Reports::GetAssessmentRRNsBySchemeNameAndType", set_with_timecop: true do
+describe "Acceptance::Reports::GetAssessmentRRNsBySchemeNameAndType" do
   include RSpecRegisterApiServiceMixin
 
   let(:valid_assessor_request_body) do
@@ -52,6 +52,8 @@ describe "Acceptance::Reports::GetAssessmentRRNsBySchemeNameAndType", set_with_t
 
   context "when there are lodgements" do
     before do
+      Timecop.freeze(2021, 6, 21, 10)
+
       add_assessor(scheme_id, "SPEC000000", valid_assessor_request_body)
 
       doc = Nokogiri.XML valid_rdsap_xml
@@ -202,6 +204,10 @@ describe "Acceptance::Reports::GetAssessmentRRNsBySchemeNameAndType", set_with_t
         },
         schema_name: "RdSAP-Schema-20.0.0",
       )
+    end
+
+    after do
+      Timecop.return
     end
 
     it "returns a report for a single scheme" do
