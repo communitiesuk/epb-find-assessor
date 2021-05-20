@@ -12,10 +12,9 @@ module UseCase
 
       # pp to_count_hash.sort_by{ |key| key }
       # insert address
-      pp childless_nodes =
-           to_count_hash.select do |key, value|
-             value == 1 && key.include?("address")
-           end
+      pp childless_nodes = to_count_hash.select do |key, value|
+        value == 1 && key.include?("address")
+      end
     end
 
   private
