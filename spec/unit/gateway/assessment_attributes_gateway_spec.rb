@@ -307,7 +307,7 @@ describe Gateway::AssessmentAttributesGateway do
         expect(assessement_attribute_values["attribute_value_int"]).to eq(1)
       end
 
-      it "returns the description and int value in the assessment_attribute_values table w" do
+      it "returns the description and int value in the assessment_attribute_values table" do
         gateway.add_attribute_value(
           "0000-0000-0000-0000-0001",
           "transaction_type",
@@ -316,7 +316,7 @@ describe Gateway::AssessmentAttributesGateway do
         expect(assessement_attribute_values["attribute_value"]).to eq(
           "marketed sale",
         )
-        expect(assessement_attribute_values["attribute_value_int"]).to eq(10.0)
+        expect(assessement_attribute_values["attribute_value_int"]).to eq(10)
       end
     end
   end

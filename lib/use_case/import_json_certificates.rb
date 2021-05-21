@@ -12,7 +12,10 @@ module UseCase
       files.each do |f|
         certificate = JSON.parse(File.read(f))
         assessment_id = certificate["assessment_id"]
-        save_atttributes(assessment_id, certificate)
+        begin
+          save_atttributes(assessment_id, certificate)
+        rescue Boundary::DuplicateAttribute
+        end
       end
     end
 
@@ -20,7 +23,8 @@ module UseCase
 
     def save_atttributes(assessment_id, certificate)
       certificate.each do |_key, _value|
-        if _value.class == Hash
+        if _value.class == Hash &&
+            _value.symbolize_keys.keys != %i[description value]
           save_atttributes(assessment_id, _value)
         else
           attribute = {

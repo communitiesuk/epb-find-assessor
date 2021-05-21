@@ -1,5 +1,5 @@
 describe UseCase::ImportJsonCertificates do
-  context "execute import use case" do
+  context "call import use case with mocked gateway" do
     subject do
       described_class.new(directory_gateway, assessment_attribute_gateway)
     end
@@ -24,6 +24,29 @@ describe UseCase::ImportJsonCertificates do
 
     it "returns a hash for each attribute" do
       expect(subject.execute).to be_truthy
+    end
+
+    context "when use case uses the actual attribute gateway" do
+      before do
+        use_case =
+          UseCase::ImportJsonCertificates.new(
+            directory_gateway,
+            Gateway::AssessmentAttributesGateway.new,
+          )
+        use_case.execute
+      end
+
+      let(:imported_data) do
+        ActiveRecord::Base.connection.exec_query(
+          "SELECT * FROM assessment_attribute_values",
+        )
+      end
+
+      it "the assessment_attribute_values table has data inserted data from the json files" do
+        expect(imported_data.rows.count).not_to eq(0)
+      end
+
+      it ""
     end
   end
 end

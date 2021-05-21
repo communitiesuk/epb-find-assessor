@@ -20,9 +20,17 @@ module Gateway
     def add_attribute_value(asessement_id, attribute_name, attribute_value)
       unless attribute_value.to_s.empty?
         unless attribute_name.to_s == RRN
-          ActiveRecord::Base.transaction do
-            attribute_id = add_attribute(attribute_name)
-            insert_attribute_value(asessement_id, attribute_id, attribute_value)
+          begin
+            ActiveRecord::Base.transaction do
+              attribute_id = add_attribute(attribute_name)
+              insert_attribute_value(
+                asessement_id,
+                attribute_id,
+                attribute_value,
+              )
+            end
+          rescue ActiveRecord::RecordNotUnique
+            raise Boundary::DuplicateAttribute, attribute_name
           end
         end
       end
@@ -293,10 +301,14 @@ module Gateway
 
     def attribute_value_int(attribute_value)
       attribute_value.to_i == 0 ? nil : attribute_value.to_i
+    rescue StandardError
+      nil
     end
 
     def attribute_value_float(attribute_value)
       attribute_value.to_f == 0 ? nil : attribute_value.to_f
+    rescue StandardError
+      nil
     end
   end
 end
