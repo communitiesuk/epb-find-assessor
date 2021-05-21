@@ -88,7 +88,9 @@ describe Gateway::AssessmentAttributesGateway do
       end
 
       it "row 4 will have a value in the float column for the heating_cost_current" do
-        expect(assessement_attribute_values[3]["attribute_value_int"]).to be_nil
+        expect(assessement_attribute_values[3]["attribute_value_int"]).to eq(
+          365,
+        )
         expect(assessement_attribute_values[3]["attribute_value_float"]).to eq(
           365.98,
         )
@@ -278,6 +280,43 @@ describe Gateway::AssessmentAttributesGateway do
       end
 
       context "when adding duplicate assessment attribute values" do
+      end
+    end
+
+    context "when we pass an enum value as a hash to the assessment attributes" do
+      let(:assessement_attribute_values) do
+        ActiveRecord::Base
+          .connection
+          .exec_query(
+            "SELECT * FROM assessment_attribute_values
+          WHERE assessment_id= '0000-0000-0000-0000-0001'
+          ",
+          )
+          .first
+      end
+
+      it "returns the description and int value in the assessment_attribute_values table w" do
+        gateway.add_attribute_value(
+          "0000-0000-0000-0000-0001",
+          "transaction_type",
+          { "description": "marketed sale", "value": "1" },
+        )
+        expect(assessement_attribute_values["attribute_value"]).to eq(
+          "marketed sale",
+        )
+        expect(assessement_attribute_values["attribute_value_int"]).to eq(1)
+      end
+
+      it "returns the description and int value in the assessment_attribute_values table w" do
+        gateway.add_attribute_value(
+          "0000-0000-0000-0000-0001",
+          "transaction_type",
+          { "description": "marketed sale", "value": "10.0" },
+        )
+        expect(assessement_attribute_values["attribute_value"]).to eq(
+          "marketed sale",
+        )
+        expect(assessement_attribute_values["attribute_value_int"]).to eq(10.0)
       end
     end
   end

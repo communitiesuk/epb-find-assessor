@@ -250,18 +250,15 @@ module Gateway
               VALUES($1, $2, $3, $4, $5)
       SQL
 
-      attribute_value_int =
-        begin
-          Integer(attribute_value)
-        rescue StandardError
-          nil
-        end
-      attribute_value_float =
-        begin
-          Float(attribute_value)
-        rescue StandardError
-          nil
-        end
+      if attribute_value.class == Hash
+        hashed_attribute = attribute_value.clone.symbolize_keys
+        attribute_value = hashed_attribute[:description]
+        attribute_int = attribute_value_float(hashed_attribute[:value])
+        attribute_float = attribute_value_float(hashed_attribute[:value])
+      else
+        attribute_int = attribute_value_int(attribute_value)
+        attribute_float = attribute_value_float(attribute_value)
+      end
 
       bindings = [
         ActiveRecord::Relation::QueryAttribute.new(
@@ -281,17 +278,25 @@ module Gateway
         ),
         ActiveRecord::Relation::QueryAttribute.new(
           "attribute_int",
-          attribute_value_int,
+          attribute_int,
           ActiveRecord::Type::BigInteger.new,
         ),
         ActiveRecord::Relation::QueryAttribute.new(
           "attribute_float",
-          attribute_value_float,
+          attribute_float,
           ActiveRecord::Type::Decimal.new,
         ),
       ]
 
       ActiveRecord::Base.connection.insert(sql, nil, nil, nil, nil, bindings)
+    end
+
+    def attribute_value_int(attribute_value)
+      attribute_value.to_i == 0 ? nil : attribute_value.to_i
+    end
+
+    def attribute_value_float(attribute_value)
+      attribute_value.to_f == 0 ? nil : attribute_value.to_f
     end
   end
 end
