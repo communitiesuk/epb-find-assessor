@@ -19,16 +19,11 @@ describe UseCase::ImportJsonCertificates do
       allow(directory_gateway).to receive(:read).and_return(files)
 
       allow(assessment_attribute_gateway).to receive(:add_attribute_value)
+        .and_return(1)
     end
 
-    it "returns the files from the directory" do
-      expect(subject.execute.count).to eq(3)
-    end
-
-    it "returns an array of hashes for each json file" do
-      expect(subject.execute[0]).to be_a(Hash)
-      expect(subject.execute[1]).to be_a(Hash)
-      expect(subject.execute[2]).to be_a(Hash)
+    it "returns a hash for each attribute" do
+      expect(subject.execute).to be_truthy
     end
   end
 end

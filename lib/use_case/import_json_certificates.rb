@@ -8,23 +8,37 @@ module UseCase
     end
 
     def execute
-      arr = []
       files = @file_gateway.read
       files.each do |f|
         certificate = JSON.parse(File.read(f))
-        save_attribute_data(certificate)
-        arr << certificate
+        assessment_id = certificate["assessment_id"]
+        save_atttributes(assessment_id, certificate)
       end
-
-      arr
     end
 
   private
 
-    def save_attribute_data(certificate)
+    def save_atttributes(assessment_id, certificate)
       certificate.each do |_key, _value|
-        @assessment_attribute_gateway.add_attribute_value("001", "a", "c")
+        if _value.class == Hash
+          save_atttributes(assessment_id, _value)
+        else
+          attribute = {
+            attribute: _key.to_s,
+            value: _value.class == Array ? _value.join("|") : _value,
+            assessment_id: assessment_id,
+          }
+          save_attribute_data(attribute)
+        end
       end
+    end
+
+    def save_attribute_data(attribute)
+      @assessment_attribute_gateway.add_attribute_value(
+        attribute[:assessment_id],
+        attribute[:attribute],
+        attribute[:value],
+      )
     end
   end
 end
