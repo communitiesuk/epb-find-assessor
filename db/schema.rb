@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_11_111424) do
+ActiveRecord::Schema.define(version: 2021_05_24_083406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 2021_05_11_111424) do
 
   create_table "assessment_attributes", primary_key: "attribute_id", force: :cascade do |t|
     t.string "attribute_name", null: false
+    t.string "parent_name"
+    t.index ["parent_name"], name: "index_assessment_attributes_on_parent_name"
   end
 
   create_table "assessments", primary_key: "assessment_id", id: :string, force: :cascade do |t|

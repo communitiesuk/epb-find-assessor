@@ -3,26 +3,32 @@ module Gateway
     # TODO: Add rrn constant and set to "asessement_id"
     RRN = "assessment_id".freeze
     attr_accessor :attribute_columns_array
+    attr_accessor :bindings
 
     def initialize
       @attribute_columns_array = []
     end
 
-    def add_attribute(attribute_name)
-      attribute_data = fetch_attribute_id(attribute_name)
+    def add_attribute(attribute_name, parent_name = nil)
+      attribute_data = fetch_attribute_id(attribute_name, parent_name)
       if attribute_data.nil?
-        insert_attribute(attribute_name)
+        insert_attribute(attribute_name, parent_name)
       else
         attribute_data["attribute_id"]
       end
     end
 
-    def add_attribute_value(asessement_id, attribute_name, attribute_value)
+    def add_attribute_value(
+      asessement_id,
+      attribute_name,
+      attribute_value,
+      parent_name = nil
+    )
       unless attribute_value.to_s.empty?
         unless attribute_name.to_s == RRN
           begin
             ActiveRecord::Base.transaction do
-              attribute_id = add_attribute(attribute_name)
+              attribute_id = add_attribute(attribute_name, parent_name)
               insert_attribute_value(
                 asessement_id,
                 attribute_id,
@@ -214,16 +220,31 @@ module Gateway
       column_array
     end
 
-    def fetch_attribute_id(attribute_name)
-      sql = <<-SQL
+    def fetch_attribute_id(attribute_name, parent_name)
+      bindings = attribute_name_binding(attribute_name)
+
+      if parent_name.nil? || parent_name.empty?
+        sql = <<-SQL
              SELECT attribute_id
               FROM assessment_attributes WHERE attribute_name = $1
               LIMIT 1
-      SQL
-      ActiveRecord::Base
-        .connection
-        .exec_query(sql, "SQL", attribute_name_binding(attribute_name))
-        .first
+        SQL
+      else
+        sql = <<-SQL
+             SELECT attribute_id
+              FROM assessment_attributes WHERE attribute_name = $1 AND parent_name = $2
+              LIMIT 1
+        SQL
+
+        bindings <<
+          ActiveRecord::Relation::QueryAttribute.new(
+            "parent_name",
+            parent_name,
+            ActiveRecord::Type::String.new,
+          )
+      end
+
+      ActiveRecord::Base.connection.exec_query(sql, "SQL", bindings).first
     end
 
     def attribute_name_binding(attribute_name)
@@ -236,10 +257,19 @@ module Gateway
       ]
     end
 
-    def insert_attribute(attribute_name)
+    def insert_attribute(attribute_name, parent_name)
+      bindings = attribute_name_binding(attribute_name)
+
+      bindings <<
+        ActiveRecord::Relation::QueryAttribute.new(
+          "parent_name",
+          parent_name,
+          ActiveRecord::Type::String.new,
+        )
+
       insert_sql = <<-SQL
-              INSERT INTO assessment_attributes(attribute_name)
-              VALUES($1)
+              INSERT INTO assessment_attributes(attribute_name,parent_name )
+              VALUES($1, $2)
       SQL
 
       ActiveRecord::Base.connection.insert(
@@ -248,7 +278,7 @@ module Gateway
         nil,
         nil,
         nil,
-        attribute_name_binding(attribute_name),
+        bindings,
       )
     end
 

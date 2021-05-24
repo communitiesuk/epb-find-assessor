@@ -10,7 +10,7 @@ describe Gateway::AssessmentAttributesGateway do
 
     let(:attributes) do
       ActiveRecord::Base.connection.exec_query(
-        "SELECT * FROM assessment_attributes",
+        "SELECT attribute_id, attribute_name FROM assessment_attributes",
       )
     end
 
@@ -45,6 +45,27 @@ describe Gateway::AssessmentAttributesGateway do
       expect(attribute_values.first["attribute_id"]).to eq(3)
       expect(attribute_values.first["attribute_value_int"]).to be_nil
       expect(attribute_values.first["attribute_value_float"]).to be_nil
+    end
+
+    context "when inserting a parent attribute name" do
+      before do
+        gateway.add_attribute("attr_parent")
+        gateway.add_attribute("attr_parent", "my_parent")
+      end
+
+      let!(:attributes) do
+        ActiveRecord::Base.connection.exec_query(
+          "SELECT * FROM assessment_attributes WHERE attribute_name = 'attr_parent'",
+        )
+      end
+
+      it "attribute table has a row for the same attribute " do
+        expect(attributes.rows.count).to eq(2)
+      end
+
+      it "the 2nd rows has the parent_name " do
+        expect(attributes[1]["parent_name"]).to eq("my_parent")
+      end
     end
 
     context "when we insert many attributes for one assessment" do
