@@ -10,6 +10,8 @@ module Gateway
       Dir
         .glob(File.join(path, "**", "*"))
         .select { |file| File.file?(file) && File.extname(file) == ".json" }
+    rescue StandardError
+      []
     end
   end
 end
