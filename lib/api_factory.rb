@@ -19,9 +19,6 @@ class ApiFactory
     @assessment_attributes_gateway ||= Gateway::AssessmentAttributesGateway.new
   end
 
-  def self.json_certificates_gateway
-    @json_certificates_gateway ||= Gateway.json_certificates_gateway.new("")
-  end
 
   def self.assessments_export_use_case
     @assessments_export_use_case ||=
@@ -32,13 +29,6 @@ class ApiFactory
       )
   end
 
-  def self.json_certificates_usec_case
-    @json_certificates_usec_case ||=
-      UseCase.ImportJsonCertificates(
-        json_certificates_gateway,
-        assessment_attributes_gateway,
-      )
-  end
 
   def self.export_opt_outs_use_case
     @export_opt_outs_use_case ||=

@@ -1,6 +1,6 @@
 describe Gateway::JsonCertificates do
   context "when reading exported json certificates from the file system" do
-    subject { Gateway::JsonCertificates.new }
+    subject { Gateway::JsonCertificates }
 
     let(:gateway) { instance_double(Gateway::JsonCertificates) }
 
@@ -14,5 +14,14 @@ describe Gateway::JsonCertificates do
       expect(gateway.read).to be_a(Array)
       expect(gateway.read.length).to eq(6)
     end
+
+    it 'gets the right directory' do
+      json_path = "#{Dir.pwd}spec/fixtures/json_export/*.json"
+      gateway = described_class.new(json_path)
+      expect(gateway.read.count).to eq(3)
+
+      end
   end
 end
+
+

@@ -15,8 +15,10 @@ module UseCase
         begin
           save_attributes(assessment_id, certificate)
         rescue Boundary::DuplicateAttribute
+        rescue Boundary::JsonAttributeSave
         end
-      end
+
+        end
     end
 
   private
@@ -39,6 +41,7 @@ module UseCase
     end
 
     def save_attribute_data(attribute)
+
       @assessment_attribute_gateway.add_attribute_value(
         attribute[:assessment_id],
         attribute[:attribute],
