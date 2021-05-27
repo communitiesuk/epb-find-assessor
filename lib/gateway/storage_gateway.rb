@@ -21,6 +21,14 @@ module Gateway
       )
     end
 
+    def list_objects(directory:, start_after: nil)
+      client.list_objects_v2(
+        bucket: storage_config.bucket_name,
+        prefix: directory,
+        start_after: start_after
+      )
+    end
+
   private
 
     def initialise_client

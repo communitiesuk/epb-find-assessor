@@ -34,4 +34,5 @@ source "https://rubygems.org" do
   gem "sinatra-cross_origin", "~> 0.4.0"
   gem "unleash", "~> 3.2.2"
   gem "zeitwerk", "~> 2.4.1"
+  gem "elasticsearch", "~> 7.12.0"
 end

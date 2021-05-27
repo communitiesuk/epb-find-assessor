@@ -36,7 +36,7 @@ class ApiFactory
     )
   end
 
-  def self.storage_gateway(bucket_name:, instance_name:)
+  def self.storage_gateway(bucket_name: nil, instance_name: nil)
     Gateway::StorageGateway.new(
       storage_config:
         storage_configuration_reader(
