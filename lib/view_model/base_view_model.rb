@@ -12,7 +12,7 @@ module ViewModel
           return nil
         end
       end
-      node ? node.content : nil
+      node && !node.to_s.strip.empty? ? node.content : nil
     end
 
     def building_reference_number
