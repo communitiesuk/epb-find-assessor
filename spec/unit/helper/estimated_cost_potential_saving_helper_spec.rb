@@ -30,5 +30,10 @@ describe Helper::EstimatedCostPotentialSavingHelper do
         )
       expect(result).to eq("1521.44")
     end
+
+    it "returns the potential saving when potential data provided as empty strings" do
+      result = helper.potential_saving("", "", "", BigDecimal("999.42"))
+      expect(result).to eq("999.42")
+    end
   end
 end

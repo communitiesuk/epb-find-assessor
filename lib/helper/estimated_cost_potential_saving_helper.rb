@@ -22,13 +22,17 @@ module Helper
       hot_water_cost_potential,
       estimated_cost = BigDecimal(0)
     )
-      potential_saving_sum =
+      potential_savings =
         [
           lighting_cost_potential,
           heating_cost_potential,
           hot_water_cost_potential,
-        ].compact.map { |value| BigDecimal(value) }.sum
-      potential_saving = BigDecimal(estimated_cost) - potential_saving_sum
+        ].compact.map do |value|
+          BigDecimal(value)
+        rescue ArgumentError
+          BigDecimal(0)
+        end
+      potential_saving = BigDecimal(estimated_cost) - potential_savings.sum
 
       "%.2f" % potential_saving
     end
