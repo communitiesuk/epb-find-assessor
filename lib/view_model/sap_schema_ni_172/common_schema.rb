@@ -59,7 +59,7 @@ module ViewModel
       end
 
       def address_id
-        "LPRN-" + xpath(%w[UPRN])
+        "LPRN-#{xpath(%w[UPRN])}"
       end
 
       def all_main_heating_descriptions

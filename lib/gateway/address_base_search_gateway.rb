@@ -81,11 +81,11 @@ module Gateway
     def populate_related_assessments(addresses)
       uprns = {}
       addresses.each_with_index do |address, i|
-        uprns["UPRN-" + address["uprn"].rjust(12, "0")] = i
+        uprns["UPRN-#{address['uprn'].rjust(12, '0')}"] = i
         addresses[i]["existing_assessments"] = []
       end
 
-      if uprns.length > 0
+      if uprns.length.positive?
         sql =
           'SELECT
               assessment_id, type_of_assessment, cancelled_at, not_for_issue_at, date_of_expiry, address_id
@@ -135,7 +135,7 @@ module Gateway
     end
 
     def record_to_address_domain(row)
-      Domain::Address.new address_id: "UPRN-" + row["uprn"].rjust(12, "0"),
+      Domain::Address.new address_id: "UPRN-#{row['uprn'].rjust(12, '0')}",
                           line1: row["address_line1"],
                           line2: row["address_line2"].presence,
                           line3: row["address_line3"].presence,

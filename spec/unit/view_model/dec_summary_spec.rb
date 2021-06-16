@@ -31,7 +31,7 @@ describe ViewModel::DecSummaryWrapper do
   let(:sample_response) { Samples.xml("CEPC-8.0.0", "dec_summary") }
 
   supported_schema.each do |schema|
-    it "can produce the correct DEC summary for " + schema[:schema_name] do
+    it "can produce the correct DEC summary for #{schema[:schema_name]}" do
       shortened_dec_summary_xml =
         described_class.new(schema[:xml], schema[:schema_name]).to_xml
 

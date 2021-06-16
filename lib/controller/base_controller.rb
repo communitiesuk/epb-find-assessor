@@ -15,7 +15,7 @@ module Controller
       super
       @xml_helper = Helper::XmlHelper.new
       @json_helper = Helper::JsonHelper.new
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new($stdout)
       @logger.level = Logger::ERROR
       @events = Helper::LogHelper.new
     end

@@ -63,7 +63,7 @@ module RSpecRegisterApiServiceMixin
 end
 
 def authenticate_and(request = nil, scopes = [], supplementary = {}, &block)
-  auth = "Bearer " + get_valid_jwt(scopes, supplementary)
+  auth = "Bearer #{get_valid_jwt(scopes, supplementary)}"
 
   if request.nil?
     header "Authorization", auth
@@ -145,8 +145,7 @@ end
 
 def add_address_base(uprn:)
   ActiveRecord::Base.connection.exec_query(
-    "INSERT INTO address_base (uprn) VALUES(" +
-      ActiveRecord::Base.connection.quote(uprn) + ")",
+    "INSERT INTO address_base (uprn) VALUES(#{ActiveRecord::Base.connection.quote(uprn)})",
   )
 end
 
@@ -158,11 +157,11 @@ def get_task(name)
 end
 
 def date_today
-  DateTime.now.strftime("%F")
+  Time.now.strftime("%F")
 end
 
 def datetime_today
-  DateTime.now.strftime("%F %H:%M:%S")
+  Time.now.strftime("%F %H:%M:%S")
 end
 
 def get_vcap_services

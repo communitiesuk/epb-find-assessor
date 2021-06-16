@@ -51,12 +51,12 @@ module UseCase
 
     def validate_new_address_id(assessment_id, new_address_id)
       if new_address_id.start_with? "UPRN-"
-        linking_to_uprn = new_address_id[5..-1]
+        linking_to_uprn = new_address_id[5..]
         if @address_base_gateway.search_by_uprn(linking_to_uprn).empty?
           raise AddressIdNotFound
         end
       elsif new_address_id.start_with? "RRN-"
-        linking_to_rrn = new_address_id[4..-1]
+        linking_to_rrn = new_address_id[4..]
         if @assessments_search_gateway.search_by_assessment_id(linking_to_rrn)
              .empty?
           raise AddressIdNotFound

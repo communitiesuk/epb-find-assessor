@@ -237,9 +237,10 @@ module Helper
     end
 
     def self.energy_tariff(value, report_type = "2")
-      if report_type.to_s == "3"
+      case report_type.to_s
+      when "3"
         SAP_ENERGY_TARIFF[value] || value
-      elsif report_type.to_s == "2"
+      when "2"
         RDSAP_ENERGY_TARIFF[value] || value
       end
     end

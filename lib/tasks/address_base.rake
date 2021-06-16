@@ -97,7 +97,7 @@ task :import_address_base do
             import_address_data_use_case.execute(row)
           }.compact
 
-          db.exec_query("INSERT INTO address_base_tmp VALUES " + query.join(", "))
+          db.exec_query("INSERT INTO address_base_tmp VALUES #{query.join(', ')}")
           i += INSERT_BATCH_SIZE
           puts "[#{Time.now}] Inserted #{i} addresses from #{entry.name}"
         end

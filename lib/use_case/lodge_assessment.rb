@@ -163,10 +163,10 @@ module UseCase
         return default_address_id(assessment)
       elsif assessment.address_id.start_with?("UPRN-")
         # TODO: Maybe in the future, prevent assessors from lodging non existing UPRNs
-        uprn = assessment.address_id[5..-1]
+        uprn = assessment.address_id[5..]
         return assessment.address_id if address_base_has_uprn?(uprn)
       elsif assessment.address_id.start_with?("RRN-")
-        related_assessment_id = assessment.address_id[4..-1]
+        related_assessment_id = assessment.address_id[4..]
         begin
           related_assessment =
             @assessments_address_id_gateway.fetch(related_assessment_id)
@@ -181,9 +181,9 @@ module UseCase
     end
 
     def default_address_id(assessment)
-      default_address_id = "RRN-" + assessment.assessment_id
+      default_address_id = "RRN-#{assessment.assessment_id}"
       if !assessment.related_rrn.nil? && is_related_report?(assessment)
-        default_address_id = "RRN-" + assessment.related_rrn
+        default_address_id = "RRN-#{assessment.related_rrn}"
       end
       default_address_id
     end

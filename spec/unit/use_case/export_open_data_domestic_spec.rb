@@ -380,7 +380,7 @@ describe UseCase::ExportOpenDataDomestic, set_with_timecop: true do
 
       expected_rdsap_values.reject { |k|
         %i[lodgement_datetime].include? k
-      }.keys.each do |key|
+      }.each_key do |key|
         it "returns the #{key} that matches the RdSAP test data for the equivalent entry in the ODC hash" do
           expect(rdsap_assessment[key.to_sym]).to eq(rdsap_odc_hash[key])
         end
@@ -421,7 +421,7 @@ describe UseCase::ExportOpenDataDomestic, set_with_timecop: true do
           solar_water_heating_flag
           mechanical_ventilation
         ].include? k
-      }.keys.each do |key|
+      }.each_key do |key|
         it "returns the #{key} that matches the SAP test data for the equivalent entry in the ODC hash" do
           expect(sap_assessment[key.to_sym]).to eq(sap_odc_hash[key])
         end

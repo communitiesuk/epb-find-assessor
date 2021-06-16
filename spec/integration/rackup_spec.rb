@@ -22,7 +22,7 @@ describe "Integration::Rackup" do
     end
     context "requests to /api/schemes" do
       let(:response) do
-        header("Authorization", "Bearer " + get_valid_jwt(%w[scheme:list]))
+        header("Authorization", "Bearer #{get_valid_jwt(%w[scheme:list])}")
         get("/api/schemes")
       end
       it "return a status of 200" do

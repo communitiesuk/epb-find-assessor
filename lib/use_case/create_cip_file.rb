@@ -12,7 +12,7 @@ module UseCase
 
       raise NoFiles if file_names.empty?
 
-      file_names.select { |file| file !~ /Scotland/ }
+      file_names.reject { |file| file =~ /Scotland/ }
     end
   end
 end

@@ -232,7 +232,7 @@ module Gateway
       SQL
 
       unless exclude.empty?
-        sql << "AND scheme_assessor_id NOT IN('" + exclude.join("', '") + "')"
+        sql << "AND scheme_assessor_id NOT IN('#{exclude.join("', '")}')"
       end
 
       binds = []
@@ -243,12 +243,12 @@ module Gateway
         binds.concat [
           ActiveRecord::Relation::QueryAttribute.new(
             "first_name",
-            names[0] + "%",
+            "#{names[0]}%",
             ActiveRecord::Type::String.new,
           ),
           ActiveRecord::Relation::QueryAttribute.new(
             "last_name",
-            names[1] + "%",
+            "#{names[1]}%",
             ActiveRecord::Type::String.new,
           ),
         ]
@@ -288,12 +288,12 @@ module Gateway
       binds = [
         ActiveRecord::Relation::QueryAttribute.new(
           "first_name",
-          first_name + "%",
+          "#{first_name}%",
           ActiveRecord::Type::String.new,
         ),
         ActiveRecord::Relation::QueryAttribute.new(
           "last_name",
-          last_name + "%",
+          "#{last_name}%",
           ActiveRecord::Type::String.new,
         ),
         ActiveRecord::Relation::QueryAttribute.new(

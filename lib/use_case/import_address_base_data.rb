@@ -23,7 +23,7 @@ module UseCase
         end
 
       [
-        "(" + ActiveRecord::Base.connection.quote(imported_address.uprn),
+        "(#{ActiveRecord::Base.connection.quote(imported_address.uprn)}",
         ActiveRecord::Base.connection.quote(imported_address.postcode),
         ActiveRecord::Base.connection.quote(imported_address.lines[0]),
         ActiveRecord::Base.connection.quote(imported_address.lines[1]),
@@ -31,7 +31,7 @@ module UseCase
         ActiveRecord::Base.connection.quote(imported_address.lines[3]),
         ActiveRecord::Base.connection.quote(imported_address.town),
         ActiveRecord::Base.connection.quote(address_data_line[:CLASS]),
-        ActiveRecord::Base.connection.quote(address_type) + ")",
+        "#{ActiveRecord::Base.connection.quote(address_type)})",
       ].join(", ")
     end
 

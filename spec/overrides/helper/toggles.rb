@@ -13,7 +13,7 @@ module Helper
     def self.set_feature(toggle_name, value)
       @toggles_enabled_features ||= {}
 
-      @toggles_enabled_features[toggle_name] = !!value
+      @toggles_enabled_features[toggle_name] = !value.nil?
 
       @toggles_enabled_features[toggle_name]
     end
