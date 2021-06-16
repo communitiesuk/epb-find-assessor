@@ -45,10 +45,9 @@ module UseCase
           else
             assessment["postcode_region"]
           end
-        unless view_model_hash[:building_reference_number].nil?
-          unless view_model_hash[:building_reference_number].include?("UPRN")
-            view_model_hash[:building_reference_number] = nil
-          end
+        if !view_model_hash[:building_reference_number].nil? &&
+            !view_model_hash[:building_reference_number].include?("UPRN")
+          view_model_hash[:building_reference_number] = nil
         end
         view_model_array << view_model_hash
         @log_gateway.create(

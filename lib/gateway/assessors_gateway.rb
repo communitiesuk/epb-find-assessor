@@ -84,6 +84,7 @@ module Gateway
 
     class Assessor < ActiveRecord::Base
     end
+
     class Scheme < ActiveRecord::Base
     end
 
@@ -269,9 +270,7 @@ module Gateway
           AND CONCAT(first_name, ' ', last_name) ILIKE $1
         SQL
 
-        if max_response_size.positive?
-          sql << "LIMIT " + (max_response_size + 1).to_s
-        end
+        sql << "LIMIT #{max_response_size + 1}" if max_response_size.positive?
       end
 
       response = Assessor.connection.exec_query sql, "SQL", binds

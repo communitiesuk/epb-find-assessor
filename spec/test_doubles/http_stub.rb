@@ -12,7 +12,7 @@ class HttpStub
       "https://test-bucket.s3.eu-west-2.amazonaws.com/#{key}",
     ).to_return status: code,
                 body:
-                                                                                                   body
+                  body
   end
 
   def self.s3_put_csv(file_name)
@@ -184,15 +184,15 @@ class HttpStub
       "http://test-auth/oauth/token",
     ).to_return status: 200,
                 body:
-                                                                           JSON
-                                                                             .generate(
-                                                                               access_token:
-                                                                                 OAUTH_TOKEN,
-                                                                               expires_in:
-                                                                                 3_600,
-                                                                               token_type:
-                                                                                 "bearer",
-                                                                             ),
+                  JSON
+                    .generate(
+                      access_token:
+                        OAUTH_TOKEN,
+                      expires_in:
+                        3_600,
+                      token_type:
+                        "bearer",
+                    ),
                 headers: {
                   "Content-Type" =>
                     "application/json",
@@ -207,13 +207,13 @@ class HttpStub
       "http://test-auth/oauth/token",
     ).to_return status: 401,
                 body:
-                                                                           JSON
-                                                                             .generate(
-                                                                               code:
-                                                                                 "NOT_AUTHENTICATED",
-                                                                               message:
-                                                                                 "Boundary::NotAuthenticatedError",
-                                                                             ),
+                  JSON
+                    .generate(
+                      code:
+                        "NOT_AUTHENTICATED",
+                      message:
+                        "Boundary::NotAuthenticatedError",
+                    ),
                 headers: {
                   "Content-Type" =>
                     "application/json",

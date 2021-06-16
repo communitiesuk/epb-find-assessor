@@ -45,80 +45,76 @@ module LodgementRules
         test:
           lambda do |adapter|
             walls = method_or_nil(adapter, :all_wall_descriptions)
-            unless walls.nil?
-              unless walls.compact.select { |desc|
-                       desc.downcase == "wall"
-                     }.empty?
-                return false
-              end
+            if !walls.nil? &&
+                !walls.compact.select { |desc| desc.downcase == "wall" }.empty?
+              return false
             end
+
             roofs = method_or_nil(adapter, :all_roof_descriptions)
-            unless roofs.nil?
-              unless roofs.compact.select { |desc|
-                       desc.downcase == "roof"
-                     }.empty?
-                return false
-              end
+            if !roofs.nil? &&
+                !roofs.compact.select { |desc| desc.downcase == "roof" }.empty?
+              return false
             end
+
             floors = method_or_nil(adapter, :all_floor_descriptions)
-            unless floors.nil?
-              unless floors.compact.select { |desc|
-                       desc.downcase == "floor"
-                     }.empty?
-                return false
-              end
+            if !floors.nil? &&
+                !floors.compact.select { |desc|
+                  desc.downcase == "floor"
+                }.empty?
+              return false
             end
+
             windows = method_or_nil(adapter, :all_window_descriptions)
-            unless windows.nil?
-              unless windows.compact.select { |desc|
-                       desc.downcase == "window"
-                     }.empty?
-                return false
-              end
+            if !windows.nil? &&
+                !windows.compact.select { |desc|
+                  desc.downcase == "window"
+                }.empty?
+              return false
             end
+
             main_heating =
               method_or_nil(adapter, :all_main_heating_descriptions)
-            unless main_heating.nil?
-              unless main_heating.compact.select { |desc|
-                       desc.downcase == "main-heating"
-                     }.empty?
-                return false
-              end
+            if !main_heating.nil? &&
+                !main_heating.compact.select { |desc|
+                  desc.downcase == "main-heating"
+                }.empty?
+              return false
             end
+
             main_heating_controls =
               method_or_nil(adapter, :all_main_heating_controls_descriptions)
-            unless main_heating_controls.nil?
-              unless main_heating_controls.compact.select { |desc|
-                       desc.downcase == "main-heating-controls"
-                     }.empty?
-                return false
-              end
+            if !main_heating_controls.nil? &&
+                !main_heating_controls.compact.select { |desc|
+                  desc.downcase == "main-heating-controls"
+                }.empty?
+              return false
             end
+
             hot_water = method_or_nil(adapter, :all_hot_water_descriptions)
-            unless hot_water.nil?
-              unless hot_water.compact.select { |desc|
-                       desc.downcase == "hot-water"
-                     }.empty?
-                return false
-              end
+            if !hot_water.nil? &&
+                !hot_water.compact.select { |desc|
+                  desc.downcase == "hot-water"
+                }.empty?
+              return false
             end
+
             lighting = method_or_nil(adapter, :all_lighting_descriptions)
-            unless lighting.nil?
-              unless lighting.compact.select { |desc|
-                       desc.downcase == "lighting"
-                     }.empty?
-                return false
-              end
+            if !lighting.nil? &&
+                !lighting.compact.select { |desc|
+                  desc.downcase == "lighting"
+                }.empty?
+              return false
             end
+
             secondary_heating =
               method_or_nil(adapter, :all_secondary_heating_descriptions)
-            unless secondary_heating.nil?
-              unless secondary_heating.compact.select { |desc|
-                       desc.downcase == "secondary-heating"
-                     }.empty?
-                return false
-              end
+            if !secondary_heating.nil? &&
+                !secondary_heating.compact.select { |desc|
+                  desc.downcase == "secondary-heating"
+                }.empty?
+              return false
             end
+
             true
           end,
       },

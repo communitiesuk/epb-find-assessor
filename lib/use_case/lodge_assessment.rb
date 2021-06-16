@@ -4,8 +4,10 @@ module UseCase
   class LodgeAssessment
     class InactiveAssessorException < StandardError
     end
+
     class AssessmentIdMismatchException < StandardError
     end
+
     class DuplicateAssessmentIdException < StandardError
     end
 
@@ -21,10 +23,8 @@ module UseCase
     def execute(data, migrated, schema_name)
       assessment_id = data[:assessment_id]
 
-      unless migrated
-        if find_assessment_by_id(assessment_id)
-          raise DuplicateAssessmentIdException
-        end
+      if !migrated && find_assessment_by_id(assessment_id)
+        raise DuplicateAssessmentIdException
       end
 
       scheme_assessor_id =
