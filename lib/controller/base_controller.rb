@@ -86,7 +86,7 @@ module Controller
       @json_helper.convert_to_ruby_hash(request.body.read.to_s, schema)
     end
 
-    def json_response(code = 200, object)
+    def json_response(code, object)
       content_type :json
       status code
 
@@ -110,7 +110,7 @@ module Controller
       json_response(code, { data: data, meta: meta })
     end
 
-    def xml_response(code = 200, xml)
+    def xml_response(code, xml)
       content_type :xml
       status code
 
@@ -119,7 +119,7 @@ module Controller
       body xml
     end
 
-    def error_response(response_code = 500, error_code, title)
+    def error_response(response_code, error_code, title)
       json_response(response_code, errors: [{ code: error_code, title: title }])
     end
 
